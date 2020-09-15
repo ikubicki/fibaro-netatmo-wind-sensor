@@ -57,35 +57,45 @@ function QuickApp:pullNetatmoData()
                 end
             end
         end
-    
-        if self.config:getDataType() == 'gust' then
-            self:updateProperty("value", module.dashboard_data.GustStrength)
-        else
-            self:updateProperty("value", module.dashboard_data.WindStrength)
-        end
 
-        self:updateProperty("unit", "km/h")
-
-        self.data = {
-            wind = {
-                strength = module.dashboard_data.WindStrength,
-                angle = module.dashboard_data.WindAngle
-            },
-            gust = {
-                strength = module.dashboard_data.GustStrength,
-                angle = module.dashboard_data.GustAngle
+        if module ~= nil then
+            if self.config:getDataType() == 'gust' then
+                self:updateProperty("value", module.dashboard_data.GustStrength)
+                self:updateProperty("unit", "km/h")
+            elseif self.config:getDataType() == 'gust-angle' then
+                self:updateProperty("value", module.dashboard_data.GustAngle)
+                self:updateProperty("unit", "°")
+            elseif self.config:getDataType() == 'wind-angle' then
+                self:updateProperty("value", module.dashboard_data.WindAngle)
+                self:updateProperty("unit", "°")
+            else
+                self:updateProperty("value", module.dashboard_data.WindStrength)
+                self:updateProperty("unit", "km/h")
+            end
+            
+            self.data = {
+                wind = {
+                    strength = module.dashboard_data.WindStrength,
+                    angle = module.dashboard_data.WindAngle
+                },
+                gust = {
+                    strength = module.dashboard_data.GustStrength,
+                    angle = module.dashboard_data.GustAngle
+                }
             }
-        }
 
-        self:trace('Module ' .. module["_id"] .. ' updated')
-        self:updateView("label1", "text", string.format(self.i18n:get('last-update'), os.date('%Y-%m-%d %H:%M:%S')))
-        self:updateView("button1", "text", self.i18n:get('refresh'))
-        
-        if string.len(self.config:getDeviceID()) < 4 then
-            self.config:setDeviceID(device["_id"])
-        end
-        if string.len(self.config:getModuleID()) < 4 then
-            self.config:setModuleID(module["_id"])
+            self:trace('Module ' .. module["_id"] .. ' updated')
+            self:updateView("label1", "text", string.format(self.i18n:get('last-update'), os.date('%Y-%m-%d %H:%M:%S')))
+            self:updateView("button1", "text", self.i18n:get('refresh'))
+            
+            if string.len(self.config:getDeviceID()) < 4 then
+                self.config:setDeviceID(device["_id"])
+            end
+            if string.len(self.config:getModuleID()) < 4 then
+                self.config:setModuleID(module["_id"])
+            end
+        else
+            self:error('Unable to retrieve module data')
         end
     end
     
