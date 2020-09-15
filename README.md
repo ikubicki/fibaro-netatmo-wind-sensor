@@ -22,7 +22,7 @@ Data updates every 5 minutes by default.
 
 `Refresh Interval` - number of minutes defining how often data should be refreshed. This value will be automatically populated on initialization of quick application.
 
-`Data Type` - gives ability to choose between `wind` and `gust`. Defaults to `wind`.
+`Data Type` - gives ability to choose between `wind` and `gust` but also `wind-angle` and `gust-angle`. Defaults to `wind`.
 
 ## Integration
 
